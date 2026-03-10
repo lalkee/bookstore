@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: bookstore
+  thymeleaf:
+    cache: false
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      additional-paths: src/main/resources
+  mongodb:
+    uri: mongodb://localhost:27017/bookstore
