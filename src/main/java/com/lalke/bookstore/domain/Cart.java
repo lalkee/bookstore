@@ -8,15 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Document(collection = "carts")
 public class Cart {
+    private List<CartItem> items = new ArrayList<>();
 
-    @Id
-    private String id;
-    private String address;
-    private List<Book> books = new ArrayList<>();
+    public void addItem(Book book) {
+        items.stream()
+                .filter(i -> i.getBookId().equals(book.getId()))
+                .findFirst()
+                .ifPresentOrElse(
+                        item -> item.setQuantity(item.getQuantity() + 1),
+                        () -> items.add(new CartItem(book.getId(), book.getTitle(), book.getPrice(), 1))
+                );
+    }
 
-    public void addBook(Book book) {
-        books.add(book);
+    public void removeItem(Book book) {
+        items.removeIf(i -> i.getBookId().equals(book.getId()));
     }
 }

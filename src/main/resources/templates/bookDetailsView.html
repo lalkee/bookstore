@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book Details</title>
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<h1 th:text="${selectedBook.title}">Title</h1>
+<p><strong>Price:</strong> <span th:text="${selectedBook.price}"></span></p>
+
+<div th:each="entry : ${selectedBook.customAttributes}">
+    <strong><span th:text="${entry.key}">Key</span>:</strong> <span th:text="${entry.value}">Value</span>
+</div>
+
+<a th:href="@{/books}">Back to Catalog</a>
+</body>
+</html>

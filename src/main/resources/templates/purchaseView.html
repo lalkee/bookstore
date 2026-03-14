@@ -1,23 +1,22 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Bookstore Purchase</title>
+    <title>Bookstore Catalog</title>
 </head>
 <body>
 <div th:replace="~{fragments :: header}"></div>
 
 <h1>Bookstore Catalog</h1>
 
-<div>
-
-    <div th:each="b : ${books}">
-        <form method="POST" th:action="@{/}">
-            <input type="hidden" name="id" th:value="${b.id}">
-            <p th:text="${b.title}">Book Title</p>
-            <button type="submit">Add to cart</button>
-        </form>
-    </div>
-
+<div th:each="b : ${books}">
+    <h3>
+        <a th:href="@{/books/{id}(id=${b.id})}" th:text="${b.title}">Book Title</a>
+    </h3>
+    <form method="POST" th:action="@{/cart/add}">
+        <input type="hidden" name="id" th:value="${b.id}">
+        <button type="submit">Add to cart</button>
+    </form>
+    <hr>
 </div>
 
 </body>

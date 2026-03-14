@@ -2,13 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Insert New Book</title>
+    <style>
+        .attribute-row { display: flex; gap: 10px; margin-bottom: 5px; }
+        .attribute-row input { width: 150px; }
+    </style>
 </head>
 <body>
 <div th:replace="~{fragments :: header}"></div>
 
 <h1>Add a New Book to Catalog</h1>
 
-<form method="POST" th:action="@{/insert}" th:object="${book}">
+<form method="POST" th:action="@{/books/insert}" th:object="${book}">
     <div>
         <label>Book Title:</label>
         <input type="text" th:field="*{title}" required />
@@ -19,10 +23,57 @@
         <input type="number" th:field="*{price}" min="0" required />
     </div>
     <br>
+
+    <h3>Custom Attributes</h3>
+    <div id="attributes-container">
+        <div th:each="entry : ${book.customAttributes}" class="attribute-row">
+            <input type="text" name="customAttributes.keys" th:value="${entry.key}" placeholder="Attribute Name" required />
+            <input type="text" name="customAttributes.values" th:value="${entry.value}" placeholder="Attribute Value" required />
+            <button type="button" onclick="removeAttribute(this)">Remove</button>
+        </div>
+    </div>
+    <button type="button" onclick="addAttribute()">Add Attribute</button>
+    <br><br>
+
     <button type="submit">Save Book</button>
 </form>
 <br>
-<a th:href="@{/}">Back to Catalog</a>
+<a th:href="@{/books}">Back to Catalog</a>
+<!-- replace this with htmx -->
+<script>
+    function addAttribute() {
+        const container = document.getElementById('attributes-container');
 
+        const div = document.createElement('div');
+        div.className = 'attribute-row';
+
+        const keyInput = document.createElement('input');
+        keyInput.type = 'text';
+        keyInput.name = 'customAttributes.keys';
+        keyInput.placeholder = 'Attribute Name';
+        keyInput.required = true;
+
+        const valueInput = document.createElement('input');
+        valueInput.type = 'text';
+        valueInput.name = 'customAttributes.values';
+        valueInput.placeholder = 'Attribute Value';
+        valueInput.required = true;
+
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.textContent = 'Remove';
+        removeButton.onclick = function() { removeAttribute(removeButton); };
+
+        div.appendChild(keyInput);
+        div.appendChild(valueInput);
+        div.appendChild(removeButton);
+
+        container.appendChild(div);
+    }
+
+    function removeAttribute(button) {
+        button.parentElement.remove();
+    }
+</script>
 </body>
 </html>

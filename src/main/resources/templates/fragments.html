@@ -7,9 +7,9 @@
     <header>
         <nav>
             <strong>My Bookstore</strong> |
-            <a th:href="@{/}">Home</a> |
-            <a th:href="@{/insert}">Add New Book</a> |
-            <a th:href="@{/cart}">Cart (<span th:text="${cart.getBooks().size()}">0</span>)</a>
+            <a th:href="@{/books}">Home</a> |
+            <a th:href="@{/books/insert}">Add New Book</a> |
+            <a th:href="@{/cart}">Cart (<span th:text="${cart.items.size()}">0</span>)</a>
         </nav>
         <hr>
     </header>
