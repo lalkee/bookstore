@@ -3,13 +3,27 @@
 <head></head>
 <body>
 
-<div th:fragment="header">
+<div th:fragment="header" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <header>
         <nav>
             <strong>My Bookstore</strong> |
             <a th:href="@{/books}">Home</a> |
-            <a th:href="@{/books/insert}">Add New Book</a> |
-            <a th:href="@{/cart}">Cart (<span th:text="${cart.items.size()}">0</span>)</a>
+            <a th:href="@{/books/insert}" sec:authorize="hasRole('ADMIN')">Add New Book</a> |
+            <a th:href="@{/cart}">Cart (<span th:text="${cart.items.size()}">0</span>)</a> |
+
+            <span sec:authorize="!isAuthenticated()">
+                <a th:href="@{/login}">Login</a> |
+                <a th:href="@{/register}">Register</a>
+            </span>
+
+            <span sec:authorize="isAuthenticated()">
+                <span style="color: green;">
+                    Welcome, <span sec:authentication="name">User</span>!
+                </span> |
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <input type="submit" value="Logout"/>
+                </form>
+            </span>
         </nav>
         <hr>
     </header>
