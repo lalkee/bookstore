@@ -4,6 +4,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,5 +25,13 @@ public class Cart {
 
     public void removeItem(Book book) {
         items.removeIf(i -> i.getBookId().equals(book.getId()));
+    }
+
+    public BigDecimal getTotalPrice() {
+        return items.stream()
+                .map(item -> item.getPrice()
+                        .multiply(new BigDecimal(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP); // Ensure 2 decimal places
     }
 }

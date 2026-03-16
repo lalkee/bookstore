@@ -2,7 +2,6 @@ package com.lalke.bookstore.controllers;
 
 import com.lalke.bookstore.domain.Cart;
 import com.lalke.bookstore.repositories.BookRepository;
-import com.lalke.bookstore.repositories.CartRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 public class CartController {
 
     private final BookRepository bookRepository;
-    private final CartRepository cartRepository;
 
     @ModelAttribute("cart")
     public Cart cart() {
@@ -40,12 +38,4 @@ public class CartController {
         return "cartView";
     }
 
-//    @PostMapping("/purchase")
-//    public String purchase(@RequestParam String address,
-//                           @ModelAttribute("cart") Cart cart) {
-//        cart.setAddress(address);
-//        cartRepository.save(cart);
-//        cart.getItems().clear();
-//        return "redirect:/books";
-//    }
 }

@@ -42,7 +42,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/insert").hasRole("ADMIN")
+                        .requestMatchers("/insert", "/orders").hasRole("ADMIN")
                         .requestMatchers("/", "/**").permitAll()
                 )
                 .formLogin(form -> form
