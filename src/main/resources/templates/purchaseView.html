@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: main(~{:: main})}">
 <head>
     <title>Bookstore Catalog</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous"></script>
 </head>
 <body class="bg-white text-gray-900">
-<div th:replace="~{fragments :: header}"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <main class="max-w-7xl mx-auto px-4 py-12">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-12 gap-y-16">
@@ -30,14 +32,16 @@
                 <span class="text-lg font-medium tracking-tight" th:text="|${b.price} RSD|">
                     0.00 RSD
                 </span>
-
-                <form method="POST" th:action="@{/cart/add}" class="relative z-10">
+                <div class="relative z-20">
                     <input type="hidden" name="id" th:value="${b.id}">
-                    <button type="submit"
+                    <button hx-post="/cart/add"
+                            hx-target="#cart-count"
+                            hx-include="closest div"
+                            hx-swap="innerHTML"
                             class="px-4 py-2 bg-black text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-gray-800 transition-all active:scale-95">
                         Add to cart
                     </button>
-                </form>
+                </div>
             </div>
 
         </div>

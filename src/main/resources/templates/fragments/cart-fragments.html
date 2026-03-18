@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<a th:fragment="cart-display"
+   id="cart-link"
+   th:href="@{/cart}"
+   class="flex items-center px-6 hover:bg-gray-200 transition-colors text-sm uppercase tracking-widest border-l border-gray-100">
+    Cart (<span th:replace="~{:: cart-count}">0</span>)
+</a>
+
+<span th:fragment="cart-count"
+      id="cart-count"
+      th:text="${cart != null ? cart.items.size() : 0}">
+        0
+    </span>
+
+</body>
+</html>

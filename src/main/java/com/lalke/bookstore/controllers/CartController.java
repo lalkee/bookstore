@@ -4,6 +4,7 @@ import com.lalke.bookstore.domain.Cart;
 import com.lalke.bookstore.repositories.BookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -21,9 +22,11 @@ public class CartController {
 
     @PostMapping("/add")
     public String addToCart(@RequestParam("id") String id,
-                            @ModelAttribute("cart") Cart cart) {
+                            @ModelAttribute("cart") Cart cart,
+                            Model model) {
         bookRepository.findById(id).ifPresent(cart::addItem);
-        return "redirect:/books";
+        model.addAttribute("cart", cart);
+        return "fragments/cart-fragments :: cart-count";
     }
 
     @PostMapping("/remove")
