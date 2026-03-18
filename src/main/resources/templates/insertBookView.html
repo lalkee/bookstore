@@ -1,124 +1,52 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Insert New Book</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="bg-white text-gray-900">
-
-<div th:replace="~{fragments :: header}"></div>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: main(~{:: main}, 'Add New Book')}">
+<body>
 
 <main class="max-w-7xl mx-auto px-4 py-12">
-
     <h1 class="text-3xl font-bold mb-8">Add a New Book to Catalog</h1>
 
     <form method="POST" th:action="@{/books/insert}" th:object="${book}" class="max-w-4xl">
-        <div class="w-[500px] space-y-4 mb-8">
 
+        <div class="w-[500px] space-y-4 mb-8">
             <div class="grid grid-cols-2 gap-4 items-center">
                 <label class="text-sm font-medium text-gray-700">Book Title:</label>
-                <input type="text"
-                       th:field="*{title}"
-                       required
-                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+                <input type="text" th:field="*{title}" required
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"/>
             </div>
             <div class="grid grid-cols-2 gap-4 items-center">
-                <label class="text-sm font-medium text-gray-700">Price:</label>
-                <input type="number"
-                       th:field="*{price}"
-                       min="0"
-                       required
-                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+                <label class="text-sm font-medium text-gray-700">Price (RSD):</label>
+                <input type="number" th:field="*{price}" min="0" required
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"/>
             </div>
         </div>
+
         <div id="attributes-container" class="space-y-4 mb-6">
-            <div th:each="entry : ${book.customAttributes}" class="flex items-center gap-4">
-                <div class="w-[500px] grid grid-cols-2 gap-4">
-                    <input type="text"
-                           name="customAttributes.keys"
-                           th:value="${entry.key}"
-                           placeholder="Attribute Name"
-                           required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-                    <input type="text"
-                           name="customAttributes.values"
-                           th:value="${entry.value}"
-                           placeholder="Attribute Value"
-                           required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-
-                </div>
-
-                <button type="button"
-                        onclick="removeAttribute(this)"
-                        class="px-4 py-2 bg-red-600 text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-red-700 transition-all active:scale-95">
-                    x
-                </button>
-            </div>
+            <th:block th:each="entry : ${book.customAttributes}">
+                <div th:replace="~{fragments/custom-attribute-row :: custom-attribute-row(key=${entry.key}, value=${entry.value})}"></div>
+            </th:block>
         </div>
+
         <div class="w-[500px] flex justify-center mb-8">
             <button type="button"
-                    onclick="addAttribute()"
+                    hx-get="/books/custom-attribute-row"
+                    hx-target="#attributes-container"
+                    hx-swap="beforeend"
                     class="px-4 py-2 bg-gray-200 text-gray-800 text-xs font-bold uppercase tracking-widest rounded hover:bg-gray-300 transition-all active:scale-95">
                 +
             </button>
         </div>
+
         <button type="submit"
                 class="w-[500px] px-4 py-2 bg-black text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-gray-800 transition-all active:scale-95">
             Save Book
         </button>
     </form>
-    <br>
-    <a th:href="@{/books}" class="text-blue-500 hover:underline">Back to Catalog</a>
+
+    <div class="mt-8">
+        <a th:href="@{/books}" class="text-sm text-gray-500 hover:text-black underline transition-colors">Back to Catalog</a>
+    </div>
 </main>
-
-<script>
-
-    function addAttribute() {
-
-        const container = document.getElementById('attributes-container');
-
-        const row = document.createElement('div');
-        row.className = 'flex items-center gap-4';
-
-        const grid = document.createElement('div');
-        grid.className = 'w-[500px] grid grid-cols-2 gap-4';
-
-        const keyInput = document.createElement('input');
-        keyInput.type = 'text';
-        keyInput.name = 'customAttributes.keys';
-        keyInput.placeholder = 'Attribute Name';
-        keyInput.required = true;
-        keyInput.className = 'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm';
-
-        const valueInput = document.createElement('input');
-        valueInput.type = 'text';
-        valueInput.name = 'customAttributes.values';
-        valueInput.placeholder = 'Attribute Value';
-        valueInput.required = true;
-        valueInput.className = 'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm';
-
-        const removeButton = document.createElement('button');
-        removeButton.type = 'button';
-        removeButton.textContent = 'x';
-        removeButton.onclick = function () { removeAttribute(removeButton); };
-        removeButton.className = 'px-4 py-2 bg-red-600 text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-red-700 transition-all active:scale-95';
-
-        grid.appendChild(keyInput);
-        grid.appendChild(valueInput);
-
-        row.appendChild(grid);
-        row.appendChild(removeButton);
-
-        container.appendChild(row);
-    }
-
-    function removeAttribute(button) {
-        button.parentElement.remove();
-    }
-
-</script>
 
 </body>
 </html>

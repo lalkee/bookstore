@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+    <div th:fragment="custom-attribute-row" class="flex items-center gap-4">
+        <div class="w-[500px] grid grid-cols-2 gap-4">
+            <input type="text"
+                   name="customAttributes.keys"
+                   th:value="${key}"
+                   placeholder="Attribute Name"
+                   required
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"/>
+            <input type="text"
+                   name="customAttributes.values"
+                   th:value="${value}"
+                   placeholder="Value"
+                   required
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"/>
+        </div>
+
+        <button type="button"
+                hx-on:click="this.closest('.flex').remove()"
+                class="px-4 py-2 bg-red-600 text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-red-700 transition-all active:scale-95">
+            x
+        </button>
+    </div>
+
+</body>
+</html>

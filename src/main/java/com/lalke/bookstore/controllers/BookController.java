@@ -68,4 +68,11 @@ public class BookController {
         return "bookDetailsView";
     }
 
+    @GetMapping("/custom-attribute-row")
+    public String getCustomAttributeRow(Model model){
+        model.addAttribute("key", "");
+        model.addAttribute("value", "");
+        return "fragments/custom-attribute-row :: custom-attribute-row";
+    }
+
 }
