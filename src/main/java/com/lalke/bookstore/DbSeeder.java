@@ -16,9 +16,24 @@ public class DbSeeder {
     @Bean
     public ApplicationRunner seedDb(BookRepository bookRepository) {
         return args -> {
-            bookRepository.save(new Book("1", "Dan sesti", new BigDecimal("600")));
-            bookRepository.save(new Book("2", "Knjiga o Blamu", new BigDecimal("500")));
-            bookRepository.save(new Book("3", "Pescanik", new BigDecimal("450")));
+            bookRepository.save(Book.builder()
+                    .id("1")
+                    .title("Dan sesti")
+                    .price(new BigDecimal("600"))
+                    .build());
+
+            bookRepository.save(Book.builder()
+                    .id("2")
+                    .title("Knjiga o Blamu")
+                    .price(new BigDecimal("500"))
+                    .build());
+
+            bookRepository.save(Book.builder()
+                    .id("3")
+                    .title("Pescanik")
+                    .price(new BigDecimal("450"))
+                    .build());
+
             log.info("Books initialized in MongoDB.");
         };
     }

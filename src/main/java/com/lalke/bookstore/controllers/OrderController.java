@@ -39,4 +39,16 @@ public class OrderController {
         return "ordersView";
     }
 
+    @PostMapping("/{id}/accept")
+    public String acceptOrder(@PathVariable String id, Model model) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        order.setStatus(Order.OrderStatus.ACCEPTED);
+        orderRepository.save(order);
+
+        model.addAttribute("order", order);
+        return "ordersView :: orderStatusFragment";
+    }
+
 }

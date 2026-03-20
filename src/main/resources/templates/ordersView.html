@@ -4,6 +4,7 @@
 <head>
     <title>All Orders</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
 </head>
 <body class="bg-white text-gray-900">
 
@@ -16,48 +17,48 @@
     </div>
 
     <div th:if="${!orders.isEmpty()}" class="space-y-8">
-        <div th:each="order : ${orders}" class="border border-gray-200
-   rounded-lg p-6">
-            <div class="flex justify-between items-start mb-4 pb-4 border-b
-   border-gray-100">
+        <div th:each="order : ${orders}" class="border border-gray-200 rounded-lg p-6">
+            <div class="flex justify-between items-start mb-4 pb-4 border-b border-gray-100">
                 <div>
-                    <h2 class="text-xl font-semibold">Order #<span
-                            th:text="${order.id}"></span></h2>
+                    <h2 class="text-xl font-semibold">Order #<span th:text="${order.id}"></span></h2>
                     <p class="text-sm text-gray-600">Placed on: <span
-                            th:text="${#temporals.format(order.timestamp, 'dd MMM yyyy,HH:mm')}"></span></p>
+                            th:text="${#temporals.format(order.timestamp, 'dd MMM yyyy, HH:mm')}"></span></p>
                     <p class="text-sm text-gray-600">Shipping to: <span
                             th:text="${order.address}"></span></p>
                 </div>
-                <div class="text-right">
-                    <p class="text-lg font-bold" th:text="'$' +
-   ${#numbers.formatDecimal(order.totalPrice, 1, 2)}"></p>
-                    <span class="px-2 py-1 text-xs font-semibold
-   rounded-full"
+
+                <div class="text-right" th:fragment="orderStatusFragment" th:id="'order-status-' + ${order.id}">
+                    <p class="text-lg font-bold" th:text="|${order.totalPrice} RSD|"></p>
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full block mb-2 text-center"
                           th:text="${order.status}"
-                          th:classappend="${order.status.name() == 'PENDING'
-   ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}">
-                           Status
-                       </span>
+                          th:classappend="${order.status.name() == 'PENDING' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}">
+                    </span>
+
+                    <button th:if="${order.status.name() == 'PENDING'}"
+                            th:hx-post="'/orders/' + ${order.id} + '/accept'"
+                            th:hx-target="'#order-status-' + ${order.id}"
+                            hx-swap="outerHTML"
+                            class="mt-2 bg-blue-600 hover:bg-blue-700 text-white text-xs py-1 px-3 rounded transition">
+                        Accept Order
+                    </button>
                 </div>
             </div>
 
             <div class="space-y-4">
-                <div th:each="item : ${order.items}" class="grid grid-cols-6
-   gap-4 items-center">
+                <div th:each="item : ${order.items}" class="grid grid-cols-6 gap-4 items-center">
                     <div class="col-span-3">
                         <p class="font-medium" th:text="${item.title}"></p>
                     </div>
                     <div>
-                        <p class="text-sm text-gray-600">Qty: <span
-                                th:text="${item.quantity}"></span></p>
+                        <p class="text-sm text-gray-600">Qty: <span th:text="${item.quantity}"></span></p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-600 text-right"
-                           th:text="'$' + ${#numbers.formatDecimal(item.price, 1, 2)} + ' each'"></p>
+                           th:text="|${item.price} RSD each|"></p>
                     </div>
                     <div>
-                        <p class="font-semibold text-right" th:text="'$' +
-   ${#numbers.formatDecimal(item.subtotal, 1, 2)}"></p>
+                        <p class="font-semibold text-right"
+                           th:text="|${item.subtotal} RSD|"></p>
                     </div>
                 </div>
             </div>

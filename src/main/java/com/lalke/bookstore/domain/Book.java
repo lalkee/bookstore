@@ -17,7 +17,6 @@ import java.util.Map;
 public class Book {
 
     @Id
-    @NonNull
     private String id;
     @NonNull
     private String title;
