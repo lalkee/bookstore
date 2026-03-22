@@ -19,6 +19,9 @@ public class Book {
     private String id;
     @NonNull
     private String title;
+
+    private String coverImageId;
+
     @NonNull
     private String authorId;
     @NonNull

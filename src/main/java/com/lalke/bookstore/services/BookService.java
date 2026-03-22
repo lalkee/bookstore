@@ -1,11 +1,20 @@
 package com.lalke.bookstore.services;
 
+import com.lalke.bookstore.domain.Author;
 import com.lalke.bookstore.domain.Book;
 import com.lalke.bookstore.repositories.AuthorRepository;
 import com.lalke.bookstore.repositories.BookRepository;
+import com.mongodb.client.gridfs.model.GridFSFile;
 import lombok.AllArgsConstructor;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.gridfs.GridFsOperations;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Service
@@ -14,6 +23,8 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
+    private final GridFsTemplate gridFsTemplate;
+    private final GridFsOperations gridFsOperations;
 
     public List<Book> findAllBooks() {
         return bookRepository.findAll();
@@ -30,7 +41,7 @@ public class BookService {
         }
 
         if (book.getAuthorId() == null || book.getAuthorId().isBlank()) {
-            com.lalke.bookstore.domain.Author newAuthor = com.lalke.bookstore.domain.Author.builder()
+            Author newAuthor = Author.builder()
                     .name(book.getAuthorName())
                     .build();
             authorRepository.save(newAuthor);
@@ -50,6 +61,14 @@ public class BookService {
         }
 
         bookRepository.save(book);
+    }
+
+    public InputStream getResource(String fileId) throws IOException {
+        GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(fileId)));
+        if (file != null) {
+            return gridFsOperations.getResource(file).getInputStream();
+        }
+        return null;
     }
 
     public List<Book> findByTitleContainingIgnoreCase(String title) {

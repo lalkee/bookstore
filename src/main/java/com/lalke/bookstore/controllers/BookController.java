@@ -3,12 +3,20 @@ package com.lalke.bookstore.controllers;
 import com.lalke.bookstore.domain.Book;
 import com.lalke.bookstore.domain.Cart;
 import com.lalke.bookstore.services.BookService;
+import com.lalke.bookstore.services.ImageService;
+import com.mongodb.client.gridfs.model.GridFSFile;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Controller
@@ -18,6 +26,7 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
+    private final ImageService imageService;
 
     @ModelAttribute("books")
     public List<Book> books() {
@@ -49,8 +58,16 @@ public class BookController {
     @PostMapping("/insert")
     public String processInsert(@ModelAttribute("book") Book book,
                                 @RequestParam(value = "customAttributes.keys", required = false) List<String> keys,
-                                @RequestParam(value = "customAttributes.values", required = false) List<String> values) {
+                                @RequestParam(value = "customAttributes.values", required = false) List<String> values,
+                                @RequestParam("file") MultipartFile file) throws IOException {
+
+        if (!file.isEmpty()) {
+            String imageId = imageService.uploadImage(file);
+            book.setCoverImageId(imageId);
+        }
+
         bookService.saveBook(book, keys, values);
+
         return "redirect:/books";
     }
 
@@ -86,5 +103,10 @@ public class BookController {
     public void deleteBook(@PathVariable String id, HttpServletResponse response){
         bookService.deleteBookById(id);
         response.setHeader("HX-Redirect", "/books");
+    }
+
+    @GetMapping("/image/{id}")
+    public void getCover(@PathVariable String id, HttpServletResponse response) throws IOException {
+        imageService.renderImage(id, response);
     }
 }
