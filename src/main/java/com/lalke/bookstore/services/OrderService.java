@@ -34,16 +34,25 @@ public class OrderService {
                 .map(OrderItem::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return Order.builder()
+        Order order = Order.builder()
                 .items(orderItems)
                 .totalPrice(totalPrice)
                 .address(address)
                 .timestamp(LocalDateTime.now())
                 .status(Order.OrderStatus.PENDING)
                 .build();
+        return orderRepository.save(order);
     }
 
     public List<Order> findAllOrders() {
         return orderRepository.findAllByOrderByTimestampDesc();
+    }
+
+    public Order acceptOrder(String id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        order.setStatus(Order.OrderStatus.ACCEPTED);
+        return orderRepository.save(order);
     }
 }

@@ -21,6 +21,6 @@ public class LoginController {
 
     @GetMapping()
     public String login() {
-        return "loginView";
+        return "auth/loginView";
     }
 }

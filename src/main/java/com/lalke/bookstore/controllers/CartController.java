@@ -1,7 +1,7 @@
 package com.lalke.bookstore.controllers;
 
 import com.lalke.bookstore.domain.Cart;
-import com.lalke.bookstore.repositories.BookRepository;
+import com.lalke.bookstore.services.CartService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class CartController {
 
-    private final BookRepository bookRepository;
+    private final CartService cartService;
 
     @ModelAttribute("cart")
     public Cart cart() {
@@ -24,7 +24,7 @@ public class CartController {
     public String addToCart(@RequestParam("id") String id,
                             @ModelAttribute("cart") Cart cart,
                             Model model) {
-        bookRepository.findById(id).ifPresent(cart::addItem);
+        cartService.addToCart(id, cart);
         model.addAttribute("cart", cart);
         return "fragments/cart-fragments :: cart-count";
     }
@@ -32,13 +32,13 @@ public class CartController {
     @PostMapping("/remove")
     public String removeFromCart(@RequestParam("id") String id,
                                  @ModelAttribute("cart") Cart cart) {
-        bookRepository.findById(id).ifPresent(cart::removeItem);
+        cartService.removeFromCart(id, cart);
         return "redirect:/cart";
     }
 
     @GetMapping
     public String showCart() {
-        return "cartView";
+        return "cart/cartView";
     }
 
 }

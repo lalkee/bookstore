@@ -1,10 +1,8 @@
 package com.lalke.bookstore.security;
 
 import com.lalke.bookstore.domain.Cart;
-import com.lalke.bookstore.repositories.UserRepository;
-import jakarta.servlet.Registration;
+import com.lalke.bookstore.services.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,17 +11,16 @@ import org.springframework.web.bind.annotation.*;
 @SessionAttributes("cart")
 @RequestMapping("/register")
 public class RegistrationController {
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     @GetMapping
     public String showRegisterForm() {
-        return "registerView";
+        return "auth/registerView";
     }
 
     @PostMapping
     public String processRegistration(RegistrationForm form) {
-        userRepository.save(form.toUser(passwordEncoder));
+        userService.registerNewUser(form);
         return "redirect:/";
     }
 

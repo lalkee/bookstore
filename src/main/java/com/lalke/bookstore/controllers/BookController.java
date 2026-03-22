@@ -2,8 +2,7 @@ package com.lalke.bookstore.controllers;
 
 import com.lalke.bookstore.domain.Book;
 import com.lalke.bookstore.domain.Cart;
-import com.lalke.bookstore.repositories.AuthorRepository;
-import com.lalke.bookstore.repositories.BookRepository;
+import com.lalke.bookstore.services.BookService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,12 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 public class BookController {
 
-    private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
+    private final BookService bookService;
 
     @ModelAttribute("books")
     public List<Book> books() {
-        return bookRepository.findAll();
+        return bookService.findAllBooks();
     }
 
     @ModelAttribute("cart")
@@ -33,53 +31,26 @@ public class BookController {
 
     @GetMapping
     public String showCatalog() {
-        return "purchaseView";
+        return "homeView";
     }
 
     @GetMapping("/insert")
     public String showInsertForm(@ModelAttribute("book") Book book) {
-        return "insertBookView";
+        return "book/insertBookView";
     }
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable("id") String id, Model model) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
-
+        Book book = bookService.findBookById(id);
         model.addAttribute("book", book);
-        return "insertBookView";
+        return "book/insertBookView";
     }
 
     @PostMapping("/insert")
     public String processInsert(@ModelAttribute("book") Book book,
                                 @RequestParam(value = "customAttributes.keys", required = false) List<String> keys,
                                 @RequestParam(value = "customAttributes.values", required = false) List<String> values) {
-
-        if (book.getId() != null && book.getId().trim().isEmpty()) {
-            book.setId(null);
-        }
-
-        if (book.getAuthorId() == null || book.getAuthorId().isBlank()) {
-            com.lalke.bookstore.domain.Author newAuthor = com.lalke.bookstore.domain.Author.builder()
-                    .name(book.getAuthorName())
-                    .build();
-            authorRepository.save(newAuthor);
-            book.setAuthorId(newAuthor.getId());
-        }
-
-        if (book.getCustomAttributes() != null) {
-            book.getCustomAttributes().clear();
-        }
-
-        if (keys != null && values != null && keys.size() == values.size()) {
-            for (int i = 0; i < keys.size(); i++) {
-                if (keys.get(i) != null && !keys.get(i).isBlank()) {
-                    book.addAttribute(keys.get(i), values.get(i));
-                }
-            }
-        }
-
-        bookRepository.save(book);
+        bookService.saveBook(book, keys, values);
         return "redirect:/books";
     }
 
@@ -91,11 +62,9 @@ public class BookController {
     @GetMapping("/{id}")
     public String showBookDetails(@PathVariable("id") String id,
                                   Model model){
-        Book selectedBook = bookRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
-
+        Book selectedBook = bookService.findBookById(id);
         model.addAttribute("selectedBook", selectedBook);
-        return "bookDetailsView";
+        return "book/bookDetailsView";
     }
 
     @GetMapping("/custom-attribute-row")
@@ -107,7 +76,7 @@ public class BookController {
 
     @GetMapping("/search")
     public String searchBooks(@RequestParam("title") String title, Model model) {
-        List<Book> filteredBooks = bookRepository.findByTitleContainingIgnoreCase(title);
+        List<Book> filteredBooks = bookService.findByTitleContainingIgnoreCase(title);
         model.addAttribute("books", filteredBooks);
         return "fragments/book-grid :: book-grid";
     }
@@ -115,9 +84,7 @@ public class BookController {
     @ResponseBody
     @DeleteMapping("/{id}")
     public void deleteBook(@PathVariable String id, HttpServletResponse response){
-        bookRepository.deleteById(id);
+        bookService.deleteBookById(id);
         response.setHeader("HX-Redirect", "/books");
     }
-
-
 }
