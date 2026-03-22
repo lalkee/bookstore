@@ -2,6 +2,7 @@ package com.lalke.bookstore.controllers;
 
 import com.lalke.bookstore.domain.Book;
 import com.lalke.bookstore.domain.Cart;
+import com.lalke.bookstore.repositories.AuthorRepository;
 import com.lalke.bookstore.repositories.BookRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.List;
 public class BookController {
 
     private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
 
     @ModelAttribute("books")
     public List<Book> books() {
@@ -57,17 +59,26 @@ public class BookController {
             book.setId(null);
         }
 
+        if (book.getAuthorId() == null || book.getAuthorId().isBlank()) {
+            com.lalke.bookstore.domain.Author newAuthor = com.lalke.bookstore.domain.Author.builder()
+                    .name(book.getAuthorName())
+                    .build();
+            authorRepository.save(newAuthor);
+            book.setAuthorId(newAuthor.getId());
+        }
+
         if (book.getCustomAttributes() != null) {
             book.getCustomAttributes().clear();
         }
 
         if (keys != null && values != null && keys.size() == values.size()) {
             for (int i = 0; i < keys.size(); i++) {
-                if (!keys.get(i).isBlank()) {
+                if (keys.get(i) != null && !keys.get(i).isBlank()) {
                     book.addAttribute(keys.get(i), values.get(i));
                 }
             }
         }
+
         bookRepository.save(book);
         return "redirect:/books";
     }
@@ -98,8 +109,7 @@ public class BookController {
     public String searchBooks(@RequestParam("title") String title, Model model) {
         List<Book> filteredBooks = bookRepository.findByTitleContainingIgnoreCase(title);
         model.addAttribute("books", filteredBooks);
-
-        return "purchaseView :: #book-grid";
+        return "fragments/book-grid :: book-grid";
     }
 
     @ResponseBody
@@ -108,4 +118,6 @@ public class BookController {
         bookRepository.deleteById(id);
         response.setHeader("HX-Redirect", "/books");
     }
+
+
 }

@@ -20,18 +20,24 @@ public class DbSeeder {
                     .id("1")
                     .title("Dan sesti")
                     .price(new BigDecimal("600"))
+                    .authorId("1")
+                    .authorName("aaa")
                     .build());
 
             bookRepository.save(Book.builder()
                     .id("2")
                     .title("Knjiga o Blamu")
                     .price(new BigDecimal("500"))
+                    .authorId("1")
+                    .authorName("aaa")
                     .build());
 
             bookRepository.save(Book.builder()
                     .id("3")
                     .title("Pescanik")
                     .price(new BigDecimal("450"))
+                    .authorId("1")
+                    .authorName("aaa")
                     .build());
 
             log.info("Books initialized in MongoDB.");

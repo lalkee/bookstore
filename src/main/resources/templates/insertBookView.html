@@ -10,12 +10,36 @@
 
     <form method="POST" th:action="@{/books/insert}" th:object="${book}" class="max-w-4xl">
         <input type="hidden" th:field="*{id}" />
+
         <div class="w-[500px] space-y-4 mb-8">
             <div class="grid grid-cols-2 gap-4 items-center">
                 <label class="text-sm font-medium text-gray-700">Book Title:</label>
                 <input type="text" th:field="*{title}" required
                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"/>
             </div>
+
+            <div class="grid grid-cols-2 gap-4 items-center relative">
+                <label class="text-sm font-medium text-gray-700">Author Name:</label>
+                <div class="relative w-full">
+                    <input type="hidden" id="authorId" th:field="*{authorId}" />
+
+                    <input type="text"
+                           id="authorSearch"
+                           th:field="*{authorName}"
+                           placeholder="Search or type new..."
+                           autocomplete="off"
+                           required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"
+                           hx-get="/authors/search-suggestions"
+                           hx-trigger="keyup changed delay:300ms"
+                           hx-target="#author-results"
+                           name="name" />
+
+                    <div id="author-results" class="absolute z-50 w-full bg-white shadow-xl rounded-md mt-1 max-h-60 overflow-auto empty:hidden border border-gray-200">
+                    </div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-2 gap-4 items-center">
                 <label class="text-sm font-medium text-gray-700">Price (RSD):</label>
                 <input type="number" th:field="*{price}" min="0" required
@@ -53,13 +77,39 @@
             hx-confirm="Are you sure you want to delete this book?"
             hx-target="body"
             hx-push-url="true"
-            class="w-[500px] px-4 py-2 bg-red-600 text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-red-700 transition-all active:scale-95">
+            class="w-[500px] mt-4 px-4 py-2 bg-red-600 text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-red-700 transition-all active:scale-95">
         Delete Book
     </button>
 
     <div class="mt-8">
         <a th:href="@{/books}" class="text-sm text-gray-500 hover:text-black underline transition-colors">Back to Catalog</a>
     </div>
+
+    <script th:inline="javascript">
+        function selectAuthorFromData(element) {
+            const id = element.getAttribute('data-id');
+            const name = element.getAttribute('data-name');
+
+            const idInput = document.getElementById('authorId');
+            const nameInput = document.getElementById('authorSearch');
+            const resultsDiv = document.getElementById('author-results');
+
+            if (idInput && nameInput) {
+                idInput.value = id;
+                nameInput.value = name;
+                resultsDiv.innerHTML = '';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('authorSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', () => {
+                    document.getElementById('authorId').value = '';
+                });
+            }
+        });
+    </script>
 </main>
 
 </body>

@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: main(~{:: main}, ${selectedBook.title})}">
 <head>
-    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-white text-gray-900">
 
@@ -16,7 +15,15 @@
         </div>
 
         <div class="flex flex-col h-full">
-            <h1 class="text-4xl font-bold tracking-tight mb-4" th:text="${selectedBook.title}">Title</h1>
+            <h1 class="text-4xl font-bold tracking-tight mb-2" th:text="${selectedBook.title}">Title</h1>
+
+            <div class="mb-6">
+                <a th:href="@{/authors/{id}(id=${selectedBook.authorId})}"
+                   th:text="${selectedBook.authorName}"
+                   class="text-lg text-gray-500 italic hover:text-black transition-colors underline-offset-4 hover:underline">
+                    Author Name
+                </a>
+            </div>
 
             <div class="text-2xl font-medium mb-8">
                 <span th:text="${selectedBook.price}">0.00</span> <span class="text-lg">RSD</span>

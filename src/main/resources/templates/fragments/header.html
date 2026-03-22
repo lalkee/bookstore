@@ -10,6 +10,12 @@
                    class="flex items-center px-4 hover:bg-gray-200 transition-colors font-medium text-sm uppercase tracking-wide">
                     Home
                 </a>
+
+                <a th:href="@{/authors}"
+                   class="flex items-center px-4 hover:bg-gray-200 transition-colors font-medium text-sm uppercase tracking-wide">
+                    Authors
+                </a>
+
                 <a th:href="@{/books/insert}"
                    sec:authorize="hasRole('ADMIN')"
                    class="flex items-center px-4 hover:bg-gray-200 transition-colors font-medium text-sm uppercase tracking-wide">

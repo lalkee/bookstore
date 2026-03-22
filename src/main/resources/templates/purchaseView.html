@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
-      th:replace="~{layout :: main(~{:: main}, 'Home Page')}">
+      th:replace="~{layout :: main(~{:: main}, 'Catalog')}">
 <head>
     <title>Bookstore Catalog</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous"></script>
 </head>
 <body class="bg-white text-gray-900">
-<div th:replace="~{fragments/header :: header}"></div>
 
 <main class="max-w-7xl mx-auto px-4 py-12">
     <div class="flex justify-end mb-12">
@@ -21,50 +18,12 @@
                hx-swap="outerHTML">
     </div>
 
-    <div id="book-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-12 gap-y-16">
-        <div th:each="b : ${books}" class="relative group flex flex-col">
-            <div class="aspect-[2/3] flex items-center justify-center bg-gray-100 rounded-md mb-4 group-hover:bg-gray-200 transition-colors">
-                <svg class="w-12 h-12 text-gray-300 group-hover:text-gray-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                </svg>
-            </div>
+    <div th:replace="~{fragments/book-grid :: book-grid(books=${books})}"></div>
 
-            <div sec:authorize="hasRole('ADMIN')" class="absolute top-3 right-3 z-30">
-                <a th:href="@{/books/edit/{id}(id=${b.id})}"
-                   class="flex items-center justify-center w-8 h-8 bg-white/90 backdrop-blur-sm shadow-md hover:bg-black hover:text-white transition-all border border-gray-100">
-                    <svg xmlns:svg="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                    </svg>
-                </a>
-            </div>
-
-            <h3 class="font-bold text-base leading-tight mb-3">
-                <a th:href="@{/books/{id}(id=${b.id})}"
-                   th:text="${b.title}"
-                   class="after:absolute after:inset-0 hover:text-gray-600 transition-colors">
-                    Book Title
-                </a>
-            </h3>
-
-            <div class="flex items-center justify-between gap-4 mt-auto">
-                <span class="text-lg font-medium tracking-tight" th:text="|${b.price} RSD|">
-                    0.00 RSD
-                </span>
-                <div class="relative z-20">
-                    <input type="hidden" name="id" th:value="${b.id}">
-                    <button hx-post="/cart/add"
-                            hx-target="#cart-count"
-                            hx-include="closest div"
-                            hx-swap="innerHTML"
-                            class="px-4 py-2 bg-black text-white text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition-all active:scale-95">
-                        Add to cart
-                    </button>
-                </div>
-            </div>
-
-        </div>
-
+    <div th:if="${#lists.isEmpty(books)}" class="py-20 text-center">
+        <p class="text-gray-500 text-lg">Our catalog is currently empty. Check back later!</p>
     </div>
 </main>
+
 </body>
 </html>

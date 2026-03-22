@@ -15,11 +15,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Document(collection = "products")
 public class Book {
-
     @Id
     private String id;
     @NonNull
     private String title;
+    @NonNull
+    private String authorId;
+    @NonNull
+    private String authorName;
     @NonNull
     private BigDecimal price;
 

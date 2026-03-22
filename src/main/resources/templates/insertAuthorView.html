@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: main(~{:: main}, ${author.id == null ? 'Add New Author' : 'Edit Author'})}">
+<body>
+
+<main class="max-w-7xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold mb-8" th:text="${author.id == null ? 'Add a New Author' : 'Edit Author'}">
+        Add a New Author
+    </h1>
+
+    <form method="POST" th:action="@{/authors/insert}" th:object="${author}" class="max-w-4xl">
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="w-[500px] space-y-4 mb-8">
+            <div class="grid grid-cols-2 gap-4 items-center">
+                <label class="text-sm font-medium text-gray-700">Author Name:</label>
+                <input type="text" th:field="*{name}" required
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"/>
+            </div>
+        </div>
+
+        <div id="attributes-container" class="space-y-4 mb-6">
+            <th:block th:each="entry : ${author.customAttributes}">
+                <div th:replace="~{fragments/custom-attribute-row :: custom-attribute-row(key=${entry.key}, value=${entry.value})}"></div>
+            </th:block>
+        </div>
+
+        <div class="w-[500px] flex justify-center mb-8">
+            <button type="button"
+                    hx-get="/books/custom-attribute-row"
+                    hx-target="#attributes-container"
+                    hx-swap="beforeend"
+                    class="px-4 py-2 bg-gray-200 text-gray-800 text-xs font-bold uppercase tracking-widest rounded hover:bg-gray-300 transition-all active:scale-95">
+                +
+            </button>
+        </div>
+
+        <div class="flex flex-col gap-4">
+            <button type="submit"
+                    class="w-[500px] px-4 py-2 bg-black text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-gray-800 transition-all active:scale-95">
+                <span th:text="${author.id == null ? 'Save Author' : 'Update Author'}">Save Author</span>
+            </button>
+        </div>
+    </form>
+
+    <button th:if="${author.id != null}"
+            type="button"
+            th:hx-delete="@{/authors/{id}(id=${author.id})}"
+            hx-confirm="Are you sure you want to delete this author?"
+            hx-target="body"
+            hx-push-url="true"
+            class="w-[500px] mt-4 px-4 py-2 bg-red-600 text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-red-700 transition-all active:scale-95">
+        Delete Author
+    </button>
+
+    <div class="mt-8">
+        <a th:href="@{/authors}" class="text-sm text-gray-500 hover:text-black underline transition-colors">Back to Authors</a>
+    </div>
+</main>
+
+</body>
+</html>
