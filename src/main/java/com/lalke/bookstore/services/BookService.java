@@ -15,7 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +26,7 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
+    private final ImageService imageService;
     private final GridFsTemplate gridFsTemplate;
     private final GridFsOperations gridFsOperations;
 
@@ -35,7 +39,15 @@ public class BookService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
     }
 
-    public void saveBook(Book book, List<String> keys, List<String> values) {
+    public void saveBook(Book book, List<String> keys, List<String> values, MultipartFile file) throws IOException {
+
+        if (file != null && !file.isEmpty()) {
+            String imageId = imageService.uploadImage(file);
+            book.setCoverImageId(imageId);
+        } else {
+            book.setCoverImageId(null);
+        }
+
         if (book.getId() != null && book.getId().trim().isEmpty()) {
             book.setId(null);
         }
@@ -77,5 +89,19 @@ public class BookService {
 
     public void deleteBookById(String id) {
         bookRepository.deleteById(id);
+    }
+
+    public List<Book> findRandomBooks(int limit) {
+        List<Book> allBooks = bookRepository.findAll();
+
+        if (allBooks.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        Collections.shuffle(allBooks);
+
+        return allBooks.stream()
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 }

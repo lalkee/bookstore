@@ -39,7 +39,9 @@ public class BookController {
     }
 
     @GetMapping
-    public String showCatalog() {
+    public String showCatalog(Model model) {
+        List<Book> featured = bookService.findRandomBooks(5);
+        model.addAttribute("featuredBooks", featured);
         return "homeView";
     }
 
@@ -61,12 +63,7 @@ public class BookController {
                                 @RequestParam(value = "customAttributes.values", required = false) List<String> values,
                                 @RequestParam("file") MultipartFile file) throws IOException {
 
-        if (!file.isEmpty()) {
-            String imageId = imageService.uploadImage(file);
-            book.setCoverImageId(imageId);
-        }
-
-        bookService.saveBook(book, keys, values);
+        bookService.saveBook(book, keys, values, file);
 
         return "redirect:/books";
     }

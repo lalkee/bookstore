@@ -1,29 +1,68 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
       th:replace="~{layout :: main(~{:: main}, 'Catalog')}">
 <head>
     <title>Bookstore Catalog</title>
 </head>
 <body class="bg-white text-gray-900">
 
-<main class="max-w-7xl mx-auto px-4 py-12">
-    <div class="flex justify-end mb-12">
-        <input type="text"
-               name="title"
-               placeholder="Search by title..."
-               class="w-full max-w-md px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black outline-none ml-auto"
-               hx-get="/books/search"
-               hx-trigger="keyup changed delay:500ms"
-               hx-target="#book-grid"
-               hx-swap="outerHTML">
+<main>
+    <div class="w-full overflow-hidden">
+        <div th:if="${not #lists.isEmpty(featuredBooks)}"
+             th:replace="~{fragments/banner :: banner(featuredBooks=${featuredBooks})}">
+        </div>
     </div>
 
-    <div th:replace="~{fragments/book-grid :: book-grid(books=${books})}"></div>
+    <div class="max-w-7xl mx-auto px-4 py-12">
+        <div class="flex justify-end mb-12">
+            <input type="text"
+                   name="title"
+                   placeholder="Search by title..."
+                   class="w-full max-w-md px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black outline-none ml-auto"
+                   hx-get="/books/search"
+                   hx-trigger="keyup changed delay:500ms"
+                   hx-target="#book-grid"
+                   hx-swap="outerHTML">
+        </div>
 
-    <div th:if="${#lists.isEmpty(books)}" class="py-20 text-center">
-        <p class="text-gray-500 text-lg">Our catalog is currently empty. Check back later!</p>
+        <div th:replace="~{fragments/book-grid :: book-grid(books=${books})}"></div>
+
+        <div th:if="${#lists.isEmpty(books)}" class="py-20 text-center">
+            <p class="text-gray-500 text-lg">Our catalog is currently empty. Check back later!</p>
+        </div>
     </div>
+
+    <script th:inline="javascript">
+        // Use window scope to ensure the buttons in the fragment can find these functions
+        window.slidesCount = /*[[${#lists.size(featuredBooks)}]]*/ 0;
+        window.currentIdx = 0;
+
+        window.updateView = function() {
+            const trackElement = document.getElementById('slider-track');
+            if (trackElement) {
+                trackElement.style.transform = `translateX(-${window.currentIdx * 100}%)`;
+            }
+        };
+
+        window.changeSlide = function(step) {
+            if (window.slidesCount <= 1) return;
+            window.currentIdx = (window.currentIdx + step + window.slidesCount) % window.slidesCount;
+            window.updateView();
+            window.restartInterval();
+        };
+
+        let scrollInterval = setInterval(() => {
+            if (window.slidesCount > 1) window.changeSlide(1);
+        }, 5000);
+
+        window.restartInterval = function() {
+            clearInterval(scrollInterval);
+            scrollInterval = setInterval(() => {
+                if (window.slidesCount > 1) window.changeSlide(1);
+            }, 5000);
+        };
+    </script>
 </main>
-
 </body>
 </html>
