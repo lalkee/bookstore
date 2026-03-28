@@ -10,3 +10,13 @@ spring:
       additional-paths: src/main/resources
   mongodb:
     uri: mongodb://localhost:27017/bookstore
+  mail:
+    host: localhost
+    port: 1025
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: false
+        starttls:
+          enable: false

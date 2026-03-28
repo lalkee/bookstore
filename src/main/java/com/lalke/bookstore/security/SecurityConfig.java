@@ -21,12 +21,12 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return username -> {
-            System.out.println("DEBUG: Attempting login for username: " + username);
+        return email -> {
+            System.out.println("DEBUG: Attempting login for email: " + email);
 
-            User user = userRepository.findByUsername(username)
+            User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> {
-                        System.out.println("DEBUG: User NOT found in MongoDB: " + username);
+                        System.out.println("DEBUG: User NOT found in MongoDB: " + email);
                         return new UsernameNotFoundException("User not found");
                     });
 

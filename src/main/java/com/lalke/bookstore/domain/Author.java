@@ -19,6 +19,8 @@ public class Author {
     @NonNull
     private String name;
 
+    private String profileImageId;
+
     private Map<String, String> customAttributes = new HashMap<>();
 
     public void addAttribute(String key, String value){

@@ -6,7 +6,9 @@ import com.lalke.bookstore.repositories.AuthorRepository;
 import com.lalke.bookstore.repositories.BookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,6 +19,7 @@ public class AuthorService {
 
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
+    private final ImageService imageService;
 
     public List<Author> findAllAuthors() {
         return authorRepository.findAll();
@@ -39,7 +42,12 @@ public class AuthorService {
         return bookRepository.findByAuthorId(id);
     }
 
-    public void saveAuthor(Author author, List<String> keys, List<String> values) {
+    public void saveAuthor(Author author, List<String> keys, List<String> values, MultipartFile file) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            String imageId = imageService.uploadImage(file);
+            author.setProfileImageId(imageId);
+        }
+
         if (author.getId() != null && author.getId().trim().isEmpty()) {
             author.setId(null);
         }
