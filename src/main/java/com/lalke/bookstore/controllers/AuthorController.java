@@ -75,7 +75,7 @@ public class AuthorController {
         response.setHeader("HX-Redirect", "/authors");
     }
 
-    @GetMapping("/search-suggestions")
+    @GetMapping("/search")
     public String searchAuthors(@RequestParam(value = "authorName", required = false) String authorName, Model model) {
         List<Author> authors;
 
@@ -91,5 +91,17 @@ public class AuthorController {
         model.addAttribute("bookCounts", bookCounts);
 
         return "fragments/author-grid :: author-grid";
+    }
+
+    @GetMapping("/search-suggestions")
+    public String getSearchSuggestions(@RequestParam("authorName") String name, Model model) {
+        if (name == null || name.trim().length() < 2) {
+            return "fragments/author-suggestions :: suggestions";
+        }
+
+        List<Author> suggestions = authorService.findAuthorsByName(name);
+        model.addAttribute("suggestedAuthors", suggestions);
+
+        return "fragments/author-suggestions :: suggestions";
     }
 }
