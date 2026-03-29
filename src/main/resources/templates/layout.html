@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" th:fragment="main(content, title)">
 <head>
     <title th:text="${title} ?: 'Default Title'">Bookstore</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
 
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -16,7 +16,7 @@
         });
     </script>
 </head>
-<body class="bg-white text-gray-900">
+<body class="bg-neutral text-on-neutral">
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div th:insert="${content}"></div>

@@ -1,9 +1,13 @@
 <div th:fragment="book-grid(books)" id="book-grid"
      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-12 gap-y-16"
      xmlns:sec="http://www.w3.org/1999/xhtml">
-    <div th:each="b : ${books}" class="relative group flex flex-col">
 
-        <div class="aspect-[2/3] flex items-center justify-center bg-gray-100 rounded-md mb-4 group-hover:bg-gray-200 transition-colors overflow-hidden">
+    <div th:each="b : ${books}"
+         class="relative group flex flex-col bg-transparent p-5 rounded-lg
+            shadow-none hover:shadow-xl hover:border-transparent hover:-translate-y-1
+            transition-all duration-300">
+
+        <div class="aspect-[2/3] flex items-center justify-center bg-gray-50 rounded-md mb-4 group-hover:bg-gray-100 transition-colors overflow-hidden">
             <img th:if="${b.coverImageId != null}"
                  th:src="@{/books/image/{id}(id=${b.coverImageId})}"
                  class="w-full h-full object-cover" />
@@ -12,9 +16,9 @@
             </svg>
         </div>
 
-        <div sec:authorize="hasRole('ADMIN')" class="absolute top-3 right-3 z-30">
+        <div sec:authorize="hasRole('ADMIN')" class="absolute top-7 right-7 z-30">
             <a th:href="@{/books/edit/{id}(id=${b.id})}"
-               class="flex items-center justify-center w-8 h-8 bg-white/90 backdrop-blur-sm shadow-md hover:bg-black hover:text-white transition-all border border-gray-100">
+               class="flex items-center justify-center w-8 h-8 bg-white/90 backdrop-blur-sm shadow-md hover:bg-black hover:text-white transition-all border border-gray-100 rounded-full">
                 <svg xmlns:svg="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
@@ -41,7 +45,7 @@
             <div class="relative z-20">
                 <input type="hidden" name="id" th:value="${b.id}">
                 <button hx-post="/cart/add" hx-target="#cart-count" hx-include="closest div" hx-swap="innerHTML"
-                        class="px-4 py-2 bg-black text-white text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition-all active:scale-95">
+                        class="px-4 py-2 bg-transparent text-xs font-bold uppercase tracking-widest hover:bg-primary-hover hover:text-on-primary transition-all active:scale-95">
                     Add to cart
                 </button>
             </div>

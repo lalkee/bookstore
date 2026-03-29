@@ -1,2 +1,15 @@
 @import "tailwindcss";
 @source "../templates/**/*.html";
+
+@theme {
+    /* --- 2. Light Cyan/White (Neutral) --- */
+    --color-neutral: #ffffff;
+    --color-neutral-hover: #dbe9ee;
+    --color-on-neutral: #282828;
+
+    /* --- 3. Sage/Tiffany Blue (Secondary) --- */
+    --color-primary-hover: #83c5be;
+    --color-primary: #6eb0a9;
+    --color-on-primary: #ffffff;
+    --color-on-primary-dark: #004d54;
+}
