@@ -71,8 +71,13 @@ public class AuthorController {
     @ResponseBody
     @DeleteMapping("/{id}")
     public void deleteAuthor(@PathVariable String id, HttpServletResponse response) {
-        authorService.deleteAuthorById(id);
-        response.setHeader("HX-Redirect", "/authors");
+        try {
+            authorService.deleteAuthorById(id);
+            response.setHeader("HX-Redirect", "/authors");
+        } catch (IllegalStateException e) {
+            response.setStatus(HttpServletResponse.SC_CONFLICT); // 409
+            response.setHeader("HX-Trigger", "{\"showMessage\": \"" + e.getMessage() + "\"}");
+        }
     }
 
     @GetMapping("/search")

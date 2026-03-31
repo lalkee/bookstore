@@ -4,19 +4,14 @@ import com.lalke.bookstore.domain.Book;
 import com.lalke.bookstore.domain.Cart;
 import com.lalke.bookstore.services.BookService;
 import com.lalke.bookstore.services.ImageService;
-import com.mongodb.client.gridfs.model.GridFSFile;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 @Controller

@@ -26,7 +26,6 @@ public class RegistrationController {
 
     private final UserService userService;
     private final JavaMailSender mailSender;
-    private final MessageSource messages;
 
     @GetMapping
     public String showRegisterForm(Model model) {

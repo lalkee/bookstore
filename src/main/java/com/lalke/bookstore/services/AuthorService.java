@@ -67,6 +67,9 @@ public class AuthorService {
     }
 
     public void deleteAuthorById(String id) {
+        if(bookRepository.existsByAuthorId(id))
+            throw new IllegalStateException("Cannot delete author: They are still linked to existing books.");
+        else
         authorRepository.deleteById(id);
     }
 
