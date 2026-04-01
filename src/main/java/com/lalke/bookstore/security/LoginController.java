@@ -1,6 +1,8 @@
 package com.lalke.bookstore.security;
 
 import com.lalke.bookstore.domain.Cart;
+import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +22,11 @@ public class LoginController {
     }
 
     @GetMapping()
-    public String login() {
+    public String login(HtmxRequest htmxRequest, HttpServletResponse response) {
+        if (htmxRequest.isHtmxRequest()) {
+            response.setHeader("HX-Title", "Login - Bookstore");
+            return "auth/loginView :: main";
+        }
         return "auth/loginView";
     }
 }

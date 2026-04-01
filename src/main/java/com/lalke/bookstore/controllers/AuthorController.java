@@ -3,6 +3,7 @@ package com.lalke.bookstore.controllers;
 import com.lalke.bookstore.domain.Author;
 import com.lalke.bookstore.domain.Book;
 import com.lalke.bookstore.services.AuthorService;
+import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -27,34 +28,50 @@ public class AuthorController {
     }
 
     @GetMapping
-    public String showAuthors(Model model) {
+    public String showAuthors(Model model, HtmxRequest htmxRequest, HttpServletResponse response) {
         List<Author> authors = authorService.findAllAuthors();
         Map<String, Long> bookCounts = authorService.getBookCounts(authors);
 
         model.addAttribute("authors", authors);
         model.addAttribute("bookCounts", bookCounts);
+        if (htmxRequest.isHtmxRequest()) {
+            response.setHeader("HX-Title", "Authors");
+            return "author/authorsView :: main";
+        }
         return "author/authorsView";
     }
 
     @GetMapping("/{id}")
-    public String showAuthorDetails(@PathVariable("id") String id, Model model) {
+    public String showAuthorDetails(@PathVariable("id") String id, Model model, HtmxRequest htmxRequest, HttpServletResponse response) {
         Author selectedAuthor = authorService.findAuthorById(id);
         List<Book> authorBooks = authorService.findBooksByAuthorId(id);
 
         model.addAttribute("selectedAuthor", selectedAuthor);
         model.addAttribute("authorBooks", authorBooks);
+        if (htmxRequest.isHtmxRequest()) {
+            response.setHeader("HX-Title", selectedAuthor.getName());
+            return "author/authorDetailsView :: main";
+        }
         return "author/authorDetailsView";
     }
 
     @GetMapping("/insert")
-    public String showInsertForm() {
+    public String showInsertForm(HtmxRequest htmxRequest, HttpServletResponse response) {
+        if (htmxRequest.isHtmxRequest()) {
+            response.setHeader("HX-Title", "Add Author");
+            return "author/insertAuthorView :: main";
+        }
         return "author/insertAuthorView";
     }
 
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("id") String id, Model model) {
+    public String showEditForm(@PathVariable("id") String id, Model model, HtmxRequest htmxRequest, HttpServletResponse response) {
         Author author = authorService.findAuthorById(id);
         model.addAttribute("author", author);
+        if (htmxRequest.isHtmxRequest()) {
+            response.setHeader("HX-Title", "Edit Author");
+            return "author/insertAuthorView :: main";
+        }
         return "author/insertAuthorView";
     }
 

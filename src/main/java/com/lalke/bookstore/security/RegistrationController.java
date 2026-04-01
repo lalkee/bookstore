@@ -4,7 +4,9 @@ import com.lalke.bookstore.domain.Cart;
 import com.lalke.bookstore.domain.User;
 import com.lalke.bookstore.dto.UserDto;
 import com.lalke.bookstore.security.UserService;
+import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -28,8 +30,12 @@ public class RegistrationController {
     private final JavaMailSender mailSender;
 
     @GetMapping
-    public String showRegisterForm(Model model) {
+    public String showRegisterForm(Model model, HtmxRequest htmxRequest, HttpServletResponse response) {
         model.addAttribute("user", new UserDto());
+        if (htmxRequest.isHtmxRequest()) {
+            response.setHeader("HX-Title", "Register - Bookstore");
+            return "auth/registerView :: main";
+        }
         return "auth/registerView";
     }
 
@@ -37,7 +43,7 @@ public class RegistrationController {
     public String processRegistration(@ModelAttribute("user") @Valid UserDto userDto, Errors errors, HttpServletRequest request) {
 
         if (errors.hasErrors()) {
-            return "auth/registerView :: registerContent";
+            return "auth/registerView :: main";
         }
 
         User registered = null;
@@ -75,7 +81,7 @@ public class RegistrationController {
                 errors.reject("globalError", "Mail server error. Registration cancelled. Please try again.");
             }
 
-            return "auth/registerView :: registerContent";
+            return "auth/registerView :: main";
         }
     }
 

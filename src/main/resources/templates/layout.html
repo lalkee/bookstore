@@ -14,12 +14,26 @@
             const header = document.querySelector('meta[name="_csrf_header"]').content;
             event.detail.headers[header] = token;
         });
+
+        document.addEventListener('htmx:afterSwap', (event) => {
+            const title = event.detail.xhr.getResponseHeader('HX-Title');
+            if (title) {
+                document.title = title;
+            }
+        });
     </script>
 </head>
-<body class="bg-neutral text-on-neutral">
+<body class="bg-neutral text-on-neutral"
+      hx-boost="true"
+      hx-target="#main-content"
+      hx-swap="innerHTML show:window:top">
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div th:insert="${content}"></div>
-
+<div id="main-content" th:insert="${content}"></div>
+<div hx-get="/api/keep-alive" 
+     hx-trigger="every 300s" 
+     hx-swap="none"
+     style="display:none;">
+</div>
 </body>
 </html>

@@ -4,6 +4,7 @@ import com.lalke.bookstore.domain.Book;
 import com.lalke.bookstore.domain.Cart;
 import com.lalke.bookstore.services.BookService;
 import com.lalke.bookstore.services.ImageService;
+import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -34,21 +35,33 @@ public class BookController {
     }
 
     @GetMapping
-    public String showCatalog(Model model) {
+    public String showCatalog(Model model, HtmxRequest htmxRequest, HttpServletResponse response) {
         List<Book> featured = bookService.findRandomBooks(5);
         model.addAttribute("featuredBooks", featured);
+        if (htmxRequest.isHtmxRequest()) {
+            response.setHeader("HX-Title", "Catalog");
+            return "homeView :: main";
+        }
         return "homeView";
     }
 
     @GetMapping("/insert")
-    public String showInsertForm(@ModelAttribute("book") Book book) {
+    public String showInsertForm(@ModelAttribute("book") Book book, HtmxRequest htmxRequest, HttpServletResponse response) {
+        if (htmxRequest.isHtmxRequest()) {
+            response.setHeader("HX-Title", "Add Book");
+            return "book/insertBookView :: main";
+        }
         return "book/insertBookView";
     }
 
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("id") String id, Model model) {
+    public String showEditForm(@PathVariable("id") String id, Model model, HtmxRequest htmxRequest, HttpServletResponse response) {
         Book book = bookService.findBookById(id);
         model.addAttribute("book", book);
+        if (htmxRequest.isHtmxRequest()) {
+            response.setHeader("HX-Title", "Edit Book");
+            return "book/insertBookView :: main";
+        }
         return "book/insertBookView";
     }
 
@@ -70,9 +83,15 @@ public class BookController {
 
     @GetMapping("/{id}")
     public String showBookDetails(@PathVariable("id") String id,
-                                  Model model){
+                                  Model model,
+                                  HtmxRequest htmxRequest,
+                                  HttpServletResponse response){
         Book selectedBook = bookService.findBookById(id);
         model.addAttribute("selectedBook", selectedBook);
+        if (htmxRequest.isHtmxRequest()) {
+            response.setHeader("HX-Title", selectedBook.getTitle());
+            return "book/bookDetailsView :: main";
+        }
         return "book/bookDetailsView";
     }
 

@@ -7,7 +7,7 @@
 </head>
 <body class="bg-white text-gray-900">
 
-<main>
+<main th:fragment="main">
     <div class="w-full overflow-hidden">
         <div th:if="${not #lists.isEmpty(featuredBooks)}"
              th:replace="~{fragments/banner :: banner(featuredBooks=${featuredBooks})}">

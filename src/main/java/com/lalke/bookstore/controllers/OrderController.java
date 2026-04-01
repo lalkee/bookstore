@@ -3,6 +3,8 @@ package com.lalke.bookstore.controllers;
 import com.lalke.bookstore.domain.Cart;
 import com.lalke.bookstore.domain.Order;
 import com.lalke.bookstore.services.OrderService;
+import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -30,8 +32,12 @@ public class OrderController {
     }
 
     @GetMapping
-    public String showAllOrders(Model model) {
+    public String showAllOrders(Model model, HtmxRequest htmxRequest, HttpServletResponse response) {
         model.addAttribute("orders", orderService.findAllOrders());
+        if (htmxRequest.isHtmxRequest()) {
+            response.setHeader("HX-Title", "Orders");
+            return "order/ordersView :: main";
+        }
         return "order/ordersView";
     }
 

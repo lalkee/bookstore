@@ -3,12 +3,10 @@
       th:replace="~{layout :: main(~{:: main}, 'Orders')}">
 <head>
     <title>All Orders</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
 </head>
-<body class="bg-white text-gray-900">
+<body class="bg-neutral text-on-neutral">
 
-<main class="max-w-7xl mx-auto px-4 py-12">
+<main th:fragment="main" class="max-w-7xl mx-auto px-4 py-12">
 
     <h1 class="text-3xl font-bold mb-8">All Customer Orders</h1>
 
@@ -38,7 +36,7 @@
                             th:hx-post="'/orders/' + ${order.id} + '/accept'"
                             th:hx-target="'#order-status-' + ${order.id}"
                             hx-swap="outerHTML"
-                            class="mt-2 bg-blue-600 hover:bg-blue-700 text-white text-xs py-1 px-3 rounded transition">
+                            class="mt-2 bg-primary hover:bg-primary-hover text-on-primary text-xs py-1 px-3 rounded transition">
                         Accept Order
                     </button>
                 </div>

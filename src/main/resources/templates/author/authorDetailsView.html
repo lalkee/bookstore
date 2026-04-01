@@ -2,11 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
       th:replace="~{layout :: main(~{:: main}, ${selectedAuthor.name})}">
 <head>
-    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-white text-gray-900">
+<body class="bg-neutral text-on-neutral">
 
-<main class="max-w-7xl mx-auto px-4 py-12">
+<main th:fragment="main" class="max-w-7xl mx-auto px-4 py-12">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
 
         <div class="aspect-square flex items-center justify-center bg-gray-100 rounded-full w-full max-w-md mx-auto group border border-gray-50 overflow-hidden">
@@ -31,13 +30,13 @@
 
                 <div th:each="entry : ${selectedAuthor.customAttributes}" class="flex items-baseline">
                     <span class="font-bold uppercase tracking-wider text-xs text-gray-500 w-32 shrink-0" th:text="|${entry.key}|">Key</span>
-                    <span class="text-gray-900 text-lg" th:text="${entry.value}">Value</span>
+                    <span class="text-on-neutral text-lg" th:text="${entry.value}">Value</span>
                 </div>
             </div>
 
             <div sec:authorize="hasRole('ADMIN')" class="pt-6">
                 <a th:href="@{/authors/edit/{id}(id=${selectedAuthor.id})}"
-                   class="inline-block px-8 py-4 border border-black text-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all active:scale-95 text-center">
+                   class="inline-block px-8 py-4 border border-primary text-primary text-xs font-bold uppercase tracking-widest hover:bg-primary hover:text-on-primary transition-all active:scale-95 text-center">
                     Edit Profile
                 </a>
             </div>
@@ -56,12 +55,12 @@
 
         <div th:if="${#lists.isEmpty(authorBooks)}" class="py-12 bg-gray-50 rounded-lg text-center">
             <p class="text-gray-500 italic">This author currently has no books listed in our catalog.</p>
-            <a sec:authorize="hasRole('ADMIN')" th:href="@{/books/insert}" class="text-black underline text-sm mt-2 inline-block">Add first book</a>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/books/insert}" class="text-primary underline text-sm mt-2 inline-block">Add first book</a>
         </div>
     </section>
 
     <div class="mt-20">
-        <a th:href="@{/authors}" class="text-sm font-medium text-gray-500 hover:text-black transition-colors flex items-center gap-2">
+        <a th:href="@{/authors}" class="text-sm font-medium text-gray-500 hover:text-primary transition-colors flex items-center gap-2">
             ← Back to Authors List
         </a>
     </div>

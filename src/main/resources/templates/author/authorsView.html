@@ -4,8 +4,8 @@
 <head>
     <title>Authors Catalog</title>
 </head>
-<body class="bg-white text-gray-900">
-<main class="max-w-7xl mx-auto px-4 py-12">
+<body class="bg-neutral text-on-neutral">
+<main th:fragment="main" class="max-w-7xl mx-auto px-4 py-12">
 
     <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-4">
         <h1 class="text-3xl font-bold">Authors</h1>
@@ -14,7 +14,7 @@
             <input type="text"
                    name="authorName"
                    placeholder="Search authors..."
-                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black outline-none"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-hover outline-none"
                    hx-get="/authors/search"
                    hx-trigger="keyup changed delay:500ms"
                    hx-target="#author-grid"
@@ -22,7 +22,7 @@
 
             <a sec:authorize="hasRole('ADMIN')"
                th:href="@{/authors/insert}"
-               class="px-4 py-2 bg-black text-white text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition-all flex items-center shrink-0">
+               class="px-4 py-2 bg-primary text-on-primary text-xs font-bold uppercase tracking-widest hover:bg-primary-hover transition-all flex items-center shrink-0">
                 + New
             </a>
         </div>

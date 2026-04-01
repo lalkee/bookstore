@@ -1,41 +1,42 @@
-<div th:fragment="header" xmlns:sec="http://www.w3.org/1999/xhtml">
-    <header class="sticky top-0 w-full bg-primary text-on-primary shadow-sm">
-        <nav class="max-w-7xl mx-auto flex items-stretch justify-between h-16 px-4">
-            <div class="flex items-stretch gap-2">
-                <a th:href="@{/books}"
+<header th:fragment="header" 
+        xmlns:sec="http://www.w3.org/1999/xhtml"
+        class="sticky top-0 z-50 w-full bg-primary text-on-primary">
+    <nav class="max-w-7xl mx-auto flex items-stretch justify-between h-16 px-4">
+        
+        <div class="flex items-stretch gap-2">
+            <a th:href="@{/books}"
+               class="flex items-center px-4 text-on-primary hover:bg-primary-hover transition-colors font-medium text-sm uppercase tracking-wide">
+                Home
+            </a>
+            <a th:href="@{/authors}"
+               class="flex items-center px-4 text-on-primary hover:bg-primary-hover transition-colors font-medium text-sm uppercase tracking-wide">
+                Authors
+            </a>
+            <a th:href="@{/books/insert}"
+               sec:authorize="hasRole('ADMIN')"
+               class="flex items-center px-4 text-on-primary hover:bg-primary-hover transition-colors font-medium text-sm uppercase tracking-wide">
+                Add Book
+            </a>
+        </div>
+
+        <div class="flex items-stretch">
+            <div th:replace="~{fragments/cart-fragments :: cart-display}"></div>
+
+            <div sec:authorize="!isAuthenticated()" class="flex items-stretch">
+                <a th:href="@{/login}"
                    class="flex items-center px-4 text-on-primary hover:bg-primary-hover transition-colors font-medium text-sm uppercase tracking-wide">
-                    Home
-                </a>
-                <a th:href="@{/authors}"
-                   class="flex items-center px-4 text-on-primary hover:bg-primary-hover transition-colors font-medium text-sm uppercase tracking-wide">
-                    Authors
-                </a>
-                <a th:href="@{/books/insert}"
-                   sec:authorize="hasRole('ADMIN')"
-                   class="flex items-center px-4 text-on-primary hover:bg-primary-hover hover:text-on-secondary transition-colors font-medium text-sm uppercase tracking-wide">
-                    Add Book
+                    Login
                 </a>
             </div>
 
-            <div class="flex items-stretch">
-                <div th:replace="~{fragments/cart-fragments :: cart-display}"></div>
-
-                <div sec:authorize="!isAuthenticated()" class="flex items-stretch">
-                    <a th:href="@{/login}"
-                       class="flex items-center px-4 text-on-primary hover:bg-primary-hover transition-colors text-sm font-bold uppercase">
-                        Login
-                    </a>
-                </div>
-
-                <div sec:authorize="isAuthenticated()" class="flex items-stretch">
-                    <form th:action="@{/logout}" method="post" class="flex items-stretch">
-                        <button type="submit"
-                                class="flex items-center px-4 text-on-primary hover:bg-primary-hover hover:text-on-neutral transition-colors text-sm font-medium">
-                            Logout
-                        </button>
-                    </form>
-                </div>
+            <div sec:authorize="isAuthenticated()" class="flex items-stretch">
+                <form th:action="@{/logout}" method="post" class="flex items-stretch">
+                    <button type="submit"
+                            class="flex items-center px-4 text-on-primary hover:bg-primary-hover transition-colors font-medium text-sm uppercase tracking-wide">
+                        Logout
+                    </button>
+                </form>
             </div>
-        </nav>
-    </header>
-</div>
+        </div>
+    </nav>
+</header>
