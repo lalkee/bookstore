@@ -2,6 +2,8 @@
 
 A bookstore web app project. The focus of this project is combining Spring and HTMX to make modern and responsive Server Siide Rendered application.
 
+![ezgif-298013d6830e7b28](https://github.com/user-attachments/assets/96f127c9-9857-4dd4-89c8-608c9aa935dd)
+
 ## Features
 
 - **Book Catalog:** Browse list of books with detailed views for each title.
