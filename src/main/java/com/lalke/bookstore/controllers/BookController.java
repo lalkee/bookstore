@@ -69,7 +69,7 @@ public class BookController {
     public String processInsert(@ModelAttribute("book") Book book,
                                 @RequestParam(value = "customAttributes.keys", required = false) List<String> keys,
                                 @RequestParam(value = "customAttributes.values", required = false) List<String> values,
-                                @RequestParam("file") MultipartFile file) throws IOException {
+                                @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
 
         bookService.saveBook(book, keys, values, file);
 

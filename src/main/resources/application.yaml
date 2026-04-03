@@ -1,22 +1,36 @@
+server:
+  port: ${SERVER_PORT:8080}
+
 spring:
   application:
     name: bookstore
+
   thymeleaf:
     cache: false
+
   devtools:
     livereload:
       enabled: true
     restart:
       additional-paths: src/main/resources
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
   mongodb:
-    uri: mongodb://localhost:27017/bookstore
+    uri: ${MONGODB_URI:mongodb://localhost:27017/bookstore}
+
   mail:
-    host: localhost
-    port: 1025
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:1025}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
     protocol: smtp
     properties:
       mail:
         smtp:
           auth: false
-        starttls:
-          enable: false
+          starttls:
+            enable: false

@@ -22,7 +22,7 @@
         </span>
     </div>
 
-    <form method="POST" th:action="@{/login}" class="space-y-6">
+    <form method="POST" th:action="@{/login}" class="space-y-6" hx-boost="false">
         <div>
             <label for="username" class="block text-sm font-medium text-gray-700">Email Address</label>
             <input type="text" name="username" id="username" required

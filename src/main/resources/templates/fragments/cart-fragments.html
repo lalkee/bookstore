@@ -11,7 +11,7 @@
 
 <span th:fragment="cart-count"
       id="cart-count"
-      th:text="${cart != null ? cart.items.size() : 0}">
+      th:text="${cart != null ? cart.getTotalItemsCount() : 0}">
         0
     </span>
 

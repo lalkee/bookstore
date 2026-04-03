@@ -79,7 +79,7 @@ public class AuthorController {
     public String processInsert(@ModelAttribute("author") Author author,
                                 @RequestParam(value = "customAttributes.keys", required = false) List<String> keys,
                                 @RequestParam(value = "customAttributes.values", required = false) List<String> values,
-                                @RequestParam("file") MultipartFile file) throws IOException {
+                                @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
 
         authorService.saveAuthor(author, keys, values, file);
         return "redirect:/authors";

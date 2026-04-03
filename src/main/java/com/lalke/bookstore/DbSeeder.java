@@ -16,6 +16,7 @@ public class DbSeeder {
     @Bean
     public ApplicationRunner seedDb(BookRepository bookRepository) {
         return args -> {
+            /*
             bookRepository.save(Book.builder()
                     .id("1")
                     .title("Dan sesti")
@@ -41,6 +42,7 @@ public class DbSeeder {
                     .build());
 
             log.info("Books initialized in MongoDB.");
+            */
         };
     }
 }

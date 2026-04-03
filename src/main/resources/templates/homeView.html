@@ -52,13 +52,17 @@
             window.restartInterval();
         };
 
-        let scrollInterval = setInterval(() => {
+        if (window.scrollInterval) {
+            clearInterval(window.scrollInterval);
+        }
+
+        window.scrollInterval = setInterval(() => {
             if (window.slidesCount > 1) window.changeSlide(1);
         }, 5000);
 
         window.restartInterval = function() {
-            clearInterval(scrollInterval);
-            scrollInterval = setInterval(() => {
+            clearInterval(window.scrollInterval);
+            window.scrollInterval = setInterval(() => {
                 if (window.slidesCount > 1) window.changeSlide(1);
             }, 5000);
         };

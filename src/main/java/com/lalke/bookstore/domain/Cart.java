@@ -23,6 +23,16 @@ public class Cart {
                 );
     }
 
+    public void clear() {
+        items.clear();
+    }
+
+    public int getTotalItemsCount() {
+        return items.stream()
+                .mapToInt(CartItem::getQuantity)
+                .sum();
+    }
+
     public void removeItem(Book book) {
         items.removeIf(i -> i.getBookId().equals(book.getId()));
     }

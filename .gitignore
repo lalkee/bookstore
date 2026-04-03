@@ -35,3 +35,5 @@ build/
 /node_modules
 src/main/resources/static/css/main.css
 
+.env
+

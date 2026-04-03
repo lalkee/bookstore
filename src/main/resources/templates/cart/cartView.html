@@ -15,7 +15,7 @@
 
     <div th:unless="${#lists.isEmpty(cart.items)}">
         <div class="space-y-4">
-            <div th:each="item : ${cart.items}" class="flex items-center justify-between border-b pb-4">
+            <div th:each="item : ${cart.items}" class="flex items-center justify-between pb-4">
                 <div class="flex-1">
                     <p class="font-bold text-lg" th:text="${item.title}">Book Title</p>
                     <div class="text-sm text-gray-600 space-x-4">
@@ -28,16 +28,20 @@
                     <p class="font-semibold" th:text="${#numbers.formatDecimal(item.getSubtotal(), 1, 'POINT', 2, 'COMMA')} + ' RSD'"></p>
                 </div>
 
-                <form method="POST" th:action="@{/cart/remove}">
-                    <input type="hidden" name="id" th:value="${item.bookId}">
-                    <button type="submit" class="px-4 py-2 bg-red-600 text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-red-700 transition-all active:scale-95">Remove</button>
-                </form>
-            </div>
-        </div>
+                <button type="button"
+                        th:hx-post="@{/cart/remove(id=${item.bookId})}"
+                        hx-target="#main-content"
+                        class="px-4 py-2 bg-red-600 text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-red-700 transition-all active:scale-95">
+                    Remove
+                </button>
+                </div>
+                </div>
+
+                <span id="cart-count" hx-swap-oob="true" th:text="${cart.getTotalItemsCount()}">0</span>
 
         <div class="mt-8 flex justify-end">
             <div class="w-full max-w-xs bg-gray-50 p-6 rounded-lg">
-                <div class="flex justify-between items-center border-t pt-4">
+                <div class="flex justify-between items-center pt-4">
                     <span class="text-xl font-bold">Total Price:</span>
                     <span class="text-xl font-bold text-primary"
                           th:text="${#numbers.formatDecimal(cart.getTotalPrice(), 1, 'POINT', 2, 'COMMA')} + ' RSD'">0,00 RSD</span>
@@ -47,7 +51,7 @@
 
         <hr class="my-8 border-gray-100">
 
-        <form method="POST" th:action="@{/orders}" class="max-w-lg">
+        <form method="POST" th:action="@{/orders}" class="max-w-lg" hx-boost="false">
             <h3 class="text-2xl font-bold mb-4">Shipping Details</h3>
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Address:</label>

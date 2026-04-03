@@ -12,6 +12,11 @@
                class="flex items-center px-4 text-on-primary hover:bg-primary-hover transition-colors font-medium text-sm uppercase tracking-wide">
                 Authors
             </a>
+            <a th:href="@{/orders}"
+               sec:authorize="isAuthenticated()"
+               class="flex items-center px-4 text-on-primary hover:bg-primary-hover transition-colors font-medium text-sm uppercase tracking-wide">
+                Orders
+            </a>
             <a th:href="@{/books/insert}"
                sec:authorize="hasRole('ADMIN')"
                class="flex items-center px-4 text-on-primary hover:bg-primary-hover transition-colors font-medium text-sm uppercase tracking-wide">
@@ -30,7 +35,7 @@
             </div>
 
             <div sec:authorize="isAuthenticated()" class="flex items-stretch">
-                <form th:action="@{/logout}" method="post" class="flex items-stretch">
+                <form th:action="@{/logout}" method="post" class="flex items-stretch" hx-boost="false">
                     <button type="submit"
                             class="flex items-center px-4 text-on-primary hover:bg-primary-hover transition-colors font-medium text-sm uppercase tracking-wide">
                         Logout

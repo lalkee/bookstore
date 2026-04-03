@@ -24,10 +24,9 @@ public class OrderController {
     }
 
     @PostMapping
-    public String makeOrder(@RequestParam String address, HttpSession httpSession){
-        Cart cart = (Cart) httpSession.getAttribute("cart");
+    public String makeOrder(@RequestParam String address, @ModelAttribute("cart") Cart cart){
         orderService.createOrder(cart, address);
-        httpSession.setAttribute("cart", new Cart());
+        cart.clear();
         return "redirect:/";
     }
 

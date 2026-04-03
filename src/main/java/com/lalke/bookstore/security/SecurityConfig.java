@@ -50,6 +50,9 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .permitAll()
                 )
+                .csrf(csrf -> csrf
+                        .csrfTokenRequestHandler(new org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler())
+                )
                 .build();
     }
 }

@@ -33,8 +33,12 @@ public class CartController {
 
     @PostMapping("/remove")
     public String removeFromCart(@RequestParam("id") String id,
-                                 @ModelAttribute("cart") Cart cart) {
+                                 @ModelAttribute("cart") Cart cart,
+                                 HtmxRequest htmxRequest) {
         cartService.removeFromCart(id, cart);
+        if (htmxRequest.isHtmxRequest()) {
+            return "cart/cartView :: main";
+        }
         return "redirect:/cart";
     }
 

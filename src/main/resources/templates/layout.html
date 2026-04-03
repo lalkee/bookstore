@@ -10,9 +10,11 @@
 
     <script>
         document.addEventListener('htmx:configRequest', (event) => {
-            const token = document.querySelector('meta[name="_csrf"]').content;
-            const header = document.querySelector('meta[name="_csrf_header"]').content;
-            event.detail.headers[header] = token;
+            const tokenNode = document.querySelector('meta[name="_csrf"]');
+            const headerNode = document.querySelector('meta[name="_csrf_header"]');
+            if (tokenNode && headerNode && tokenNode.content) {
+                event.detail.headers[headerNode.content] = tokenNode.content;
+            }
         });
 
         document.addEventListener('htmx:afterSwap', (event) => {
